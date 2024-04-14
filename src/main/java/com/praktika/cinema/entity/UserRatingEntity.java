@@ -2,11 +2,9 @@ package com.praktika.cinema.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user_rating")
@@ -21,4 +19,36 @@ public class UserRatingEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public byte getScore() {
+        return score;
+    }
+
+    public void setScore(byte score) {
+        this.score = score;
+    }
+
+    public FilmEntity getFilm() {
+        return film;
+    }
+
+    public void setFilm(FilmEntity film) {
+        this.film = film;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
 }
