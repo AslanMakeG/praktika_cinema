@@ -125,20 +125,7 @@ public class FilmEntity {
         this.userRatings = userRatings;
     }
 
-    @Override
-    public String toString() {
-        return "FilmEntity{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", durationSeconds=" + durationSeconds +
-                ", budget=" + budget +
-                ", realeaseDate=" + realeaseDate +
-                ", country='" + country + '\'' +
-                ", ageLimit='" + ageLimit + '\'' +
-                ", persons=" + persons +
-                ", genres=" + genres +
-                ", userRatings=" + userRatings +
-                '}';
+    public void addGenre(GenreEntity genreEntity){
+        this.genres.add(genreEntity);
     }
 }
