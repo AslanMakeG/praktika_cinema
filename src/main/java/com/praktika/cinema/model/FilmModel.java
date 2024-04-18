@@ -5,9 +5,7 @@ import com.praktika.cinema.entity.GenreEntity;
 import com.praktika.cinema.entity.PersonEntity;
 import com.praktika.cinema.entity.UserRatingEntity;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class FilmModel {
     private Long id;
@@ -19,8 +17,8 @@ public class FilmModel {
     private String country;
     private String ageLimit;
     private float score;
-    private List<GenreEntity> genres = new ArrayList<>();
-    private List<PersonModel> persons = new ArrayList<>();
+    private Set<GenreEntity> genres = new HashSet<>();
+    private Set<PersonModel> persons = new HashSet<>();
 
     public static FilmModel toModel(FilmEntity filmEntity){
         FilmModel model = new FilmModel();
@@ -134,23 +132,23 @@ public class FilmModel {
         this.score = score;
     }
 
-    public List<GenreEntity> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(List<GenreEntity> genres) {
-        this.genres = genres;
-    }
-
     public void addPerson(PersonEntity personEntity){
         this.persons.add(PersonModel.toModel(personEntity));
     }
 
-    public List<PersonModel> getPersons() {
+    public Set<GenreEntity> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<GenreEntity> genres) {
+        this.genres = genres;
+    }
+
+    public Set<PersonModel> getPersons() {
         return persons;
     }
 
-    public void setPersons(List<PersonModel> persons) {
+    public void setPersons(Set<PersonModel> persons) {
         this.persons = persons;
     }
 }

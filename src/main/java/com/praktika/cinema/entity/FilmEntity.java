@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -28,12 +29,12 @@ public class FilmEntity {
     @JoinTable(name="film_persons",
             joinColumns = @JoinColumn(name="film_id"),
             inverseJoinColumns = @JoinColumn(name="person_id"))
-    private List<PersonEntity> persons;
+    private Set<PersonEntity> persons;
     @ManyToMany
     @JoinTable(name="film_genres",
             joinColumns = @JoinColumn(name="film_id"),
             inverseJoinColumns = @JoinColumn(name="genre_id"))
-    private List<GenreEntity> genres;
+    private Set<GenreEntity> genres;
     @OneToMany(mappedBy = "film")
     private List<UserRatingEntity> userRatings;
 
@@ -101,19 +102,23 @@ public class FilmEntity {
         this.ageLimit = ageLimit;
     }
 
-    public List<PersonEntity> getPersons() {
+    public void setDurationSeconds(int durationSeconds) {
+        this.durationSeconds = durationSeconds;
+    }
+
+    public Set<PersonEntity> getPersons() {
         return persons;
     }
 
-    public void setPersons(List<PersonEntity> persons) {
+    public void setPersons(Set<PersonEntity> persons) {
         this.persons = persons;
     }
 
-    public List<GenreEntity> getGenres() {
+    public Set<GenreEntity> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<GenreEntity> genres) {
+    public void setGenres(Set<GenreEntity> genres) {
         this.genres = genres;
     }
 
@@ -128,4 +133,16 @@ public class FilmEntity {
     public void addGenre(GenreEntity genreEntity){
         this.genres.add(genreEntity);
     }
+
+    public void deleteGenre(GenreEntity genreEntity){
+        this.genres.remove(genreEntity);
+    }
+    public void addPerson(PersonEntity personEntity){
+        this.persons.add(personEntity);
+    }
+
+    public void deletePerson(PersonEntity personEntity){
+        this.persons.remove(personEntity);
+    }
+
 }

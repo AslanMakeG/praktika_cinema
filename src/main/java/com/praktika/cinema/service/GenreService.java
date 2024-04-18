@@ -1,7 +1,9 @@
 package com.praktika.cinema.service;
 
 import com.praktika.cinema.entity.GenreEntity;
+import com.praktika.cinema.exception.genre.GenreAlreadyExistsException;
 import com.praktika.cinema.exception.genre.GenreNotFoundException;
+import com.praktika.cinema.exception.person.PersonAlreadyExistsException;
 import com.praktika.cinema.repository.GenreRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,11 @@ public class GenreService {
     @Autowired
     private GenreRepo genreRepo;
 
-    public GenreEntity create(GenreEntity genreEntity){
+    public GenreEntity create(GenreEntity genreEntity) throws GenreAlreadyExistsException {
+        if(genreRepo.existsByName(genreEntity.getName())){
+            throw new GenreAlreadyExistsException("Жанр уже существует");
+        }
+
         return genreRepo.save(genreEntity);
     }
 
@@ -27,7 +33,7 @@ public class GenreService {
     }
 
     public List<GenreEntity> getAll(){
-        return (List<GenreEntity>) genreRepo.findAll();
+        return genreRepo.findAll();
     }
 
     public GenreEntity getOne(Long id) throws GenreNotFoundException {
