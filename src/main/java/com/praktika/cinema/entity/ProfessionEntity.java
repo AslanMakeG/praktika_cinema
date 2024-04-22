@@ -14,7 +14,7 @@ import java.util.List;
 public class ProfessionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; //Long стоило бы заменить на byte
     @Enumerated(EnumType.STRING)
     private EProfession name;
     @OneToMany(mappedBy = "profession")

@@ -5,6 +5,7 @@ import com.praktika.cinema.entity.UserEntity;
 import com.praktika.cinema.entity.UserRatingEntity;
 import com.praktika.cinema.exception.genre.GenreNotFoundException;
 import com.praktika.cinema.exception.person.PersonNotFoundException;
+import com.praktika.cinema.model.FilmCUModel;
 import com.praktika.cinema.model.FilmModel;
 import com.praktika.cinema.exception.film.FilmNotFoundException;
 import com.praktika.cinema.repository.*;
@@ -27,8 +28,16 @@ public class FilmService {
     @Autowired
     private UserRatingRepo userRatingRepo;
 
-    public FilmModel create(FilmEntity film){
-        return FilmModel.toModel(filmRepo.save(film));
+    public FilmModel create(FilmCUModel film){
+        FilmEntity filmEntity = new FilmEntity();
+        filmEntity.setName(film.getName());
+        filmEntity.setDescription(film.getDescription());
+        filmEntity.setDurationSeconds(film.getDurationSeconds());
+        filmEntity.setBudget(film.getBudget());
+        filmEntity.setRealeaseDate(film.getRealeaseDate());
+        filmEntity.setCountry(film.getCountry());
+        filmEntity.setAgeLimit(film.getAgeLimit());
+        return FilmModel.toModel(filmRepo.save(filmEntity));
     }
 
     public Long delete(Long id){
@@ -36,8 +45,18 @@ public class FilmService {
         return id;
     }
 
-    public FilmModel update(FilmEntity film){
-        return FilmModel.toModel(filmRepo.save(film));
+    public FilmModel update(FilmCUModel film, Long filmId) throws FilmNotFoundException {
+        FilmEntity filmEntity = filmRepo.findById(filmId).orElseThrow(
+                () -> new FilmNotFoundException("Фильм не найден")
+        );
+        filmEntity.setName(film.getName());
+        filmEntity.setDescription(film.getDescription());
+        filmEntity.setDurationSeconds(film.getDurationSeconds());
+        filmEntity.setBudget(film.getBudget());
+        filmEntity.setRealeaseDate(film.getRealeaseDate());
+        filmEntity.setCountry(film.getCountry());
+        filmEntity.setAgeLimit(film.getAgeLimit());
+        return FilmModel.toModel(filmRepo.save(filmEntity));
     }
 
     public FilmModel getOne(Long id) throws FilmNotFoundException {
@@ -138,24 +157,35 @@ public class FilmService {
 
         UserRatingEntity userRatingEntity = new UserRatingEntity();
 
+        //Минимальная оценка - 1, максимальная - 5. Если нужно удалить оценку, то будет 0
+        if(score > 5) {
+            score = 5;
+        }
+        else if(score < 0){
+            score = 0;
+        }
 
         if(userRatingRepo.existsByFilmAndUser(film, user)){
             userRatingEntity = userRatingRepo.findByFilmAndUser(film, user).orElse(new UserRatingEntity());
         }
         else{
+            //Если нет оценки от пользователя, то нужно поставить хотя бы минимальную
+            if(score < 1){
+                score = 1;
+            }
+
             userRatingEntity.setFilm(film);
             userRatingEntity.setUser(user);
         }
 
-        if(score > 5) {
-            score = 5;
+        if(score == 0){
+            userRatingRepo.delete(userRatingEntity);
         }
-        else if(score < 1){
-            score = 1;
+        else{
+            userRatingEntity.setScore(score);
+            userRatingRepo.save(userRatingEntity);
         }
 
-        userRatingEntity.setScore(score);
-        userRatingRepo.save(userRatingEntity);
         return FilmModel.toModel(filmRepo.findById(filmId).orElseThrow(
                 () -> new FilmNotFoundException("Фильм не найден")
         ));
